@@ -1,8 +1,8 @@
 document.addEventListener('DOMContentLoaded', () => {
     const quoteUl = document.querySelector('#quote-list')
     const popUrl = "http://localhost:3000/quotes?_embed=likes"
-    const likesUrl = "http://localhost:3000/likes"
-    const quotesUrl = "http://localhost:3000/quotes"
+    const likesUrl = "http://localhost:3000/likes/"
+    const quotesUrl = "http://localhost:3000/quotes/"
 
 
     const renderQuoteList = (quotes) => {
@@ -26,7 +26,7 @@ document.addEventListener('DOMContentLoaded', () => {
         <footer class="blockquote-footer">${quote.author}</footer>
         <br>
         <button class='btn-success'>Likes: <span>${quote.likes[0]["id"]}</span></button>
-        <button class='btn-danger'>Delete</button>
+        <button class='btn-danger' data-id='${quote.id}'>Delete</button>
         </blockquote>`
         quoteUl.appendChild(quoteLi)
     }
@@ -57,6 +57,23 @@ document.addEventListener('DOMContentLoaded', () => {
         })
     }
 
+    const clickHandler = () => {
+        document.addEventListener('click', e => {
+            if (e.target.matches('.btn-danger')) {
+                const deleteButton = e.target
+                const quoteId = deleteButton.dataset.id
+
+                fetch(quotesUrl + quoteId, {
+                    method: 'DELETE',
+                })
+                .then(response => response.text()) 
+                .then(response => {
+                    getQuotes()
+                })
+            }
+        } )
+    }
+
 
 
     const getQuotes = () => {
@@ -69,6 +86,7 @@ document.addEventListener('DOMContentLoaded', () => {
 
     getQuotes()
     submitHandler()
+    clickHandler()
 
 
 })
