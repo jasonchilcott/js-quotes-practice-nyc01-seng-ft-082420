@@ -25,7 +25,7 @@ document.addEventListener('DOMContentLoaded', () => {
         <p class="mb-0">${quote.quote}</p>
         <footer class="blockquote-footer">${quote.author}</footer>
         <br>
-        <button class='btn-success'>Likes: <span>${quote.likes[0]["id"]}</span></button>
+        <button class='btn-success' data-id='${quote.id}'>Likes: <span>${quote.likes[0]["id"]}</span></button>
         <button class='btn-danger' data-id='${quote.id}'>Delete</button>
         </blockquote>`
         quoteUl.appendChild(quoteLi)
@@ -68,6 +68,29 @@ document.addEventListener('DOMContentLoaded', () => {
                 })
                 .then(response => response.text()) 
                 .then(response => {
+                    getQuotes()
+                })
+            } else if (e.target.matches('.btn-success')) {
+                const likeButton = e.target
+                let likes = parseInt(likeButton.querySelector('span').innerText, 10)
+                likes++
+                const quoteId = parseInt(likeButton.dataset.id, 10)
+                const createdAt = Date.now()
+
+                const newLike = { quoteId: quoteId, createdAt: createdAt }
+
+                const options = {
+                    method: "POST",
+                    headers: {
+                        "content-type": "application/json",
+                        "accept": "application/json"
+                    },
+                    body: JSON.stringify(newLike)
+                }
+
+                fetch(likesUrl + likes, options)
+                .then (response =>  response.json())
+                .then (response => {
                     getQuotes()
                 })
             }
