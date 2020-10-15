@@ -10,16 +10,19 @@ document.addEventListener('DOMContentLoaded', () => {
     }
 
     const renderQuote = (quote) => {
-        if (quote.likes === []){
-            quote.likes = 0
+        if (quote.likes.length === 0){
+            let noLikes = {
+                "id": 0
+            }
+            quote.likes.push(noLikes)
         }
         let quoteLi = document.createElement('li')
-        quoteLi.className('quote-card')
+        quoteLi.classList.add('quote-card')
         quoteLi.innerHTML = `<blockquote class="blockquote">
         <p class="mb-0">${quote.quote}</p>
         <footer class="blockquote-footer">${quote.author}</footer>
         <br>
-        <button class='btn-success'>Likes: <span>${quote.likes}</span></button>
+        <button class='btn-success'>Likes: <span>${quote.likes[0]["id"]}</span></button>
         <button class='btn-danger'>Delete</button>
         </blockquote>`
         quoteUl.appendChild(quoteLi)
