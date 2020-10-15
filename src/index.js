@@ -1,9 +1,12 @@
 document.addEventListener('DOMContentLoaded', () => {
     const quoteUl = document.querySelector('#quote-list')
     const popUrl = "http://localhost:3000/quotes?_embed=likes"
+    const likesUrl = "http://localhost:3000/likes"
+    const quotesUrl = "http://localhost:3000/quotes"
 
 
     const renderQuoteList = (quotes) => {
+        quoteUl.innerHTML = ""
         for (const quote of quotes) {
             renderQuote(quote)
         }
@@ -28,6 +31,32 @@ document.addEventListener('DOMContentLoaded', () => {
         quoteUl.appendChild(quoteLi)
     }
 
+    const submitHandler = () => {
+        document.addEventListener('submit', e => {
+            e.preventDefault()
+            const form = e.target
+            const newQuoteText = form.quote.value
+            const newQuoteAuthor = form.author.value
+            const newQuote = { quote: newQuoteText, author: newQuoteAuthor }
+
+            const options = {
+                method: "POST",
+                headers: {
+                    "content-type": "application/json",
+                    "accept": "application/json"
+                },
+                body: JSON.stringify(newQuote)
+            }
+
+            fetch(quotesUrl, options)
+            .then(response => response.json())
+            .then(_quote => {
+                getQuotes()
+            })
+            form.reset()
+        })
+    }
+
 
 
     const getQuotes = () => {
@@ -39,6 +68,8 @@ document.addEventListener('DOMContentLoaded', () => {
 
 
     getQuotes()
+    submitHandler()
+
 
 })
 
